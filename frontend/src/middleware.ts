@@ -6,6 +6,7 @@ export default withAuth(
     return NextResponse.next();
   },
   {
+    secret: process.env.NEXTAUTH_SECRET ?? "priscila_agendor_secret_key_dev_2026",
     callbacks: {
       authorized: ({ token }) => !!token,
     },

@@ -97,11 +97,11 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const loadSettings = useCallback(async () => {
+  const loadSettings = useCallback(async (showError = false) => {
     try {
       const res = await fetch("/api/settings");
+      if (!res.ok) throw new Error("api_error");
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Erro ao carregar");
       setSettings({
         botPhoneNumber: data.botPhoneNumber ?? "",
         botName: data.botName ?? "Agendor",
@@ -110,16 +110,16 @@ export default function SettingsPage() {
         botQrCode: data.botQrCode ?? "",
       });
     } catch {
-      toast.error("Erro ao carregar configurações. Verifique a conexão.");
+      if (showError) toast.error("Erro ao carregar configurações. Recarregue a página.");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadSettings();
-    // Polling mais rápido (10s) para capturar QR code assim que o bot inicializa
-    const interval = setInterval(loadSettings, 10_000);
+    loadSettings(true); // load inicial mostra erro
+    // Polling silencioso — sem toast repetido
+    const interval = setInterval(() => loadSettings(false), 10_000);
     return () => clearInterval(interval);
   }, [loadSettings]);
 
@@ -134,15 +134,21 @@ export default function SettingsPage() {
           botName: settings.botName,
         }),
       });
-      const data = await res.json();
+      let data: Record<string, string>;
+      try {
+        data = await res.json();
+      } catch {
+        toast.error("Sessão expirada. Recarregue a página e tente novamente.");
+        return;
+      }
       if (!res.ok) {
         toast.error(data.error ?? "Erro ao salvar.");
         return;
       }
-      setSettings(data);
+      setSettings((s) => ({ ...s, ...data }));
       toast.success("Configurações salvas com sucesso.");
     } catch {
-      toast.error("Erro de conexão. Tente novamente.");
+      toast.error("Sem conexão. Verifique sua internet e tente novamente.");
     } finally {
       setSaving(false);
     }
