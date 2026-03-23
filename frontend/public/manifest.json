@@ -1,7 +1,7 @@
 {
   "name": "Dra. Priscila Agendor",
   "short_name": "Agendor",
-  "description": "Gestão Profissional Oftalmológica",
+  "description": "Gestão Profissional - Dra. Priscila",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",

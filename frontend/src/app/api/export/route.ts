@@ -10,7 +10,7 @@ export async function GET() {
     ]);
 
     const today = new Date().toISOString().split("T")[0];
-    const filename = `DraPriscilaAgendor-backup-${today}.json`;
+    const filename = `agendor-backup-${today}.json`;
 
     const payload = JSON.stringify({ workplaces, shifts, auditLogs }, null, 2);
 
