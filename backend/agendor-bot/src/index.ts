@@ -13,9 +13,9 @@ async function applyRemoteSettings(): Promise<void> {
   const remote = await fetchRemoteSettings();
   if (!remote) return;
 
-  if (remote.botPhoneNumber && !config.draPhoneNumber) {
+  if (remote.botPhoneNumber) {
     config.draPhoneNumber = formatJid(remote.botPhoneNumber);
-    logger.info(`[Settings] Número do bot carregado do painel: ${config.draPhoneNumber}`);
+    logger.info(`[Settings] Número carregado do painel: ${config.draPhoneNumber}`);
   }
 
   if (remote.botName && remote.botName !== config.botName) {
