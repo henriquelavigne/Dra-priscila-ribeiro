@@ -36,9 +36,6 @@ export function WorkplaceCard({ workplace, onEdit }: WorkplaceCardProps) {
             <p className="text-sm text-gray-500 mt-0.5">
               Média: {formatCurrency(Number(workplace.averageValue))}
             </p>
-            <p className="text-sm text-gray-500">
-              Prazo pgto: {workplace.paymentDeadlineDays} dias
-            </p>
           </div>
         </div>
 
