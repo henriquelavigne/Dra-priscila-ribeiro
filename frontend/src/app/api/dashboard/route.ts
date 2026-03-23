@@ -2,6 +2,22 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import * as shiftService from "@/services/shift.service";
 
+const MONTH_SHORT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+
+function monthRange(year: number, month: number) {
+  return {
+    gte: new Date(Date.UTC(year, month - 1, 1)),
+    lt: new Date(Date.UTC(year, month, 1)),
+  };
+}
+
+function prevMonth(year: number, month: number, n: number) {
+  let m = month - n;
+  let y = year;
+  while (m <= 0) { m += 12; y--; }
+  return { month: m, year: y };
+}
+
 export async function GET() {
   try {
     const now = new Date();
@@ -13,6 +29,13 @@ export async function GET() {
 
     const monthStart = new Date(Date.UTC(currentYear, currentMonth - 1, 1));
     const monthEnd = new Date(Date.UTC(currentYear, currentMonth, 1));
+
+    // Last 3 months (including current) for chart
+    const chartMonths = [
+      prevMonth(currentYear, currentMonth, 2),
+      prevMonth(currentYear, currentMonth, 1),
+      { month: currentMonth, year: currentYear },
+    ];
 
     const [
       currentMonthRevenue,
@@ -28,24 +51,15 @@ export async function GET() {
       shiftService.getMonthlyRevenue(nextMonth, nextYear),
       shiftService.listShifts({ month: currentMonth, year: currentYear }),
       shiftService.getUpcomingShifts(5),
-      // Completed shifts this month for confirmed revenue
       prisma.shift.findMany({
-        where: {
-          status: "completed",
-          date: { gte: monthStart, lt: monthEnd },
-        },
+        where: { status: "completed", date: { gte: monthStart, lt: monthEnd } },
         select: { actualValue: true, expectedValue: true },
       }),
-      // Payments registered this month
       prisma.payment.findMany({
-        where: {
-          paymentDate: { gte: monthStart, lt: monthEnd },
-        },
+        where: { paymentDate: { gte: monthStart, lt: monthEnd } },
         select: { amountReceived: true },
       }),
-      // Active auto-notes count (global)
       prisma.autoNote.count({ where: { status: "active" } }),
-      // All completed shifts without full payment for pending total
       prisma.shift.findMany({
         where: { status: "completed" },
         select: {
@@ -55,6 +69,32 @@ export async function GET() {
         },
       }),
     ]);
+
+    // Revenue chart: expected + received for each of the last 3 months
+    const revenueChart = await Promise.all(
+      chartMonths.map(async ({ month, year }) => {
+        const range = monthRange(year, month);
+
+        const [shiftsInMonth, paymentsInMonth] = await Promise.all([
+          prisma.shift.findMany({
+            where: { date: range, status: { in: ["scheduled", "completed"] } },
+            select: { expectedValue: true },
+          }),
+          prisma.payment.findMany({
+            where: { shift: { date: range } },
+            select: { amountReceived: true },
+          }),
+        ]);
+
+        return {
+          month,
+          year,
+          monthLabel: MONTH_SHORT[month - 1],
+          expected: shiftsInMonth.reduce((s, sh) => s + Number(sh.expectedValue), 0),
+          received: paymentsInMonth.reduce((s, p) => s + Number(p.amountReceived), 0),
+        };
+      })
+    );
 
     const currentMonthShiftCount = currentMonthShifts.filter(
       (s) => s.status === "scheduled" || s.status === "completed"
@@ -70,13 +110,10 @@ export async function GET() {
       0
     );
 
-    // Global totalPending: sum of unpaid/partial across all time
     const totalPending = allPendingShifts.reduce((sum, s) => {
       const ref = Number(s.actualValue ?? s.expectedValue);
       const received = s.payment ? Number(s.payment.amountReceived) : 0;
-      if (!s.payment || s.payment.status !== "paid") {
-        return sum + (ref - received);
-      }
+      if (!s.payment || s.payment.status !== "paid") return sum + (ref - received);
       return sum;
     }, 0);
 
@@ -90,6 +127,7 @@ export async function GET() {
         currentMonthReceived,
         totalPending,
         activeAutoNotesCount: allActiveAutoNotes,
+        revenueChart,
       },
       { status: 200 }
     );
