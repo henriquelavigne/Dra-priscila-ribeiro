@@ -1,12 +1,53 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model Workplace {
+  id                   String   @id @default(uuid())
+  name                 String
+  color                String
+  averageValue         Decimal  @map("average_value")
+  paymentDeadlineDays  Int      @map("payment_deadline_days")
+  notes                String?
+  isActive             Boolean  @default(true) @map("is_active")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  shifts Shift[]
+
+  @@map("workplaces")
+}
+
+model Shift {
+  id            String   @id @default(uuid())
+  workplaceId   String   @map("workplace_id")
+  date          DateTime @db.Date
+  expectedValue Decimal  @map("expected_value")
+  actualValue   Decimal? @map("actual_value")
+  status        String   @default("scheduled")
+  notes         String?
+  source        String   @default("web")
+  sourceDetail  String?  @map("source_detail")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  workplace Workplace @relation(fields: [workplaceId], references: [id])
+
+  @@map("shifts")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  entityType String   @map("entity_type")
+  entityId   String   @map("entity_id")
+  action     String
+  changes    Json
+  source     String   @default("web")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("audit_log")
 }
