@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "OphthaClin",
+  title: "Dra. Priscila Agendor",
   description: "Gestão Profissional Oftalmológica",
 };
 
