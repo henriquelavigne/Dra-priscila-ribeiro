@@ -1,12 +1,9 @@
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 const authOptions: AuthOptions = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  adapter: PrismaAdapter(prisma) as any,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 dias
@@ -47,8 +44,9 @@ const authOptions: AuthOptions = {
   ],
   pages: {
     signIn: "/login",
+    error: "/login",
   },
-  secret: process.env.NEXTAUTH_SECRET || "priscila_agendor_secret_key_dev",
+  secret: process.env.NEXTAUTH_SECRET ?? "priscila_agendor_secret_key_dev_2026",
 };
 
 const handler = NextAuth(authOptions);
