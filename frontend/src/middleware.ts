@@ -21,18 +21,10 @@ export default withAuth(
   }
 );
 
-// Proteger todas as rotas sob /api, /dashboard, /schedule, /finances, /workplaces
-// mas liberar /login, /api/auth, /_next, favicon, manifest
+// Protege apenas as páginas (não as rotas /api/*).
+// Cada route handler de API é responsável pela sua própria autenticação se necessário.
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (auth endpoints)
-     * - login (login page)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, manifest.json, fonts (public files)
-     */
-    "/((?!api/auth|api/settings|login|_next/static|_next/image|favicon.ico|manifest.json|fonts).*)",
+    "/((?!api/|login|_next/static|_next/image|favicon.ico|manifest.json|fonts).*)",
   ],
 };
