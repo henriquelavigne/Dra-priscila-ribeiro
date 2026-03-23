@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { WorkplaceCard } from "@/components/workplace/WorkplaceCard";
 import { WorkplaceForm } from "@/components/workplace/WorkplaceForm";
 import { Button } from "@/components/ui/button";
-import type { Workplace } from "@/types";
+import type { Workplace } from "@prisma/client";
 import { toast } from "sonner";
 
 function SkeletonCard() {
@@ -26,7 +26,8 @@ function SkeletonCard() {
 }
 
 export default function WorkplacesPage() {
-  const [workplaces, setWorkplaces] = useState<Workplace[]>([]);
+  type WorkplaceWithCount = Workplace & { _count: { autoNotes: number } };
+  const [workplaces, setWorkplaces] = useState<WorkplaceWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [editingWorkplace, setEditingWorkplace] = useState<Workplace | undefined>();
@@ -108,6 +109,7 @@ export default function WorkplacesPage() {
             <WorkplaceCard
               key={wp.id}
               workplace={wp}
+              activeAutoNotesCount={wp._count.autoNotes}
               onEdit={handleEdit}
               onRefresh={loadWorkplaces}
             />

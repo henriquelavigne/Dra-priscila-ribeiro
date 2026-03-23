@@ -7,6 +7,11 @@ export async function listWorkplaces(activeOnly?: boolean) {
   return prisma.workplace.findMany({
     where: activeOnly ? { isActive: true } : undefined,
     orderBy: { name: "asc" },
+    include: {
+      _count: {
+        select: { autoNotes: { where: { status: "active" } } },
+      },
+    },
   });
 }
 

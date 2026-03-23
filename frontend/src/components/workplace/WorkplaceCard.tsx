@@ -7,16 +7,22 @@ import type { Workplace } from "@/types";
 
 interface WorkplaceCardProps {
   workplace: Workplace;
+  activeAutoNotesCount?: number;
   onEdit: (workplace: Workplace) => void;
   onRefresh: () => void;
 }
 
-export function WorkplaceCard({ workplace, onEdit }: WorkplaceCardProps) {
+export function WorkplaceCard({ workplace, activeAutoNotesCount = 0, onEdit }: WorkplaceCardProps) {
   return (
     <button
-      className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 active:scale-[0.98] transition-transform"
+      className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 active:scale-[0.98] transition-transform relative"
       onClick={() => onEdit(workplace)}
     >
+      {/* Notification dot */}
+      {activeAutoNotesCount > 0 && (
+        <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-red-500" />
+      )}
+
       <div className="flex items-start justify-between gap-3">
         {/* Left: color dot + info */}
         <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -36,6 +42,11 @@ export function WorkplaceCard({ workplace, onEdit }: WorkplaceCardProps) {
             <p className="text-sm text-gray-500 mt-0.5">
               Média: {formatCurrency(Number(workplace.averageValue))}
             </p>
+            {activeAutoNotesCount > 0 && (
+              <p className="text-xs text-red-500 mt-0.5">
+                {activeAutoNotesCount} pagamento(s) pendente(s)
+              </p>
+            )}
           </div>
         </div>
 

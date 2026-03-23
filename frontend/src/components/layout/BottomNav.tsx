@@ -6,21 +6,10 @@ import { Home, Building2, Calendar, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  {
-    href: "/dashboard",
-    icon: Home,
-    label: "Início",
-  },
-  {
-    href: "/workplaces",
-    icon: Building2,
-    label: "Locais",
-  },
-  {
-    href: "/schedule",
-    icon: Calendar,
-    label: "Agenda",
-  },
+  { href: "/dashboard", icon: Home, label: "Início" },
+  { href: "/workplaces", icon: Building2, label: "Locais" },
+  { href: "/schedule", icon: Calendar, label: "Agenda" },
+  { href: "/finances", icon: DollarSign, label: "Financeiro" },
 ];
 
 export function BottomNav() {
@@ -56,12 +45,6 @@ export function BottomNav() {
             </Link>
           );
         })}
-
-        {/* Financeiro — em breve */}
-        <div className="flex flex-col items-center gap-1 flex-1 py-2 opacity-40 cursor-not-allowed">
-          <DollarSign size={20} className="text-gray-400" />
-          <span className="text-xs text-gray-400">Em breve</span>
-        </div>
       </div>
     </nav>
   );
