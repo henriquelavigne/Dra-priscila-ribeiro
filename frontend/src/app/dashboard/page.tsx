@@ -9,6 +9,7 @@ import {
   Building2,
   CheckCircle,
   Wallet,
+  Download,
 } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -96,7 +97,36 @@ export default function DashboardPage() {
       .finally(() => setLoading(false));
   }
 
+  // Revalidate when user returns to the tab
+  useEffect(() => {
+    function onVisible() {
+      if (document.visibilityState === "visible") load();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => { load(); }, []);
+
+  async function handleDownload() {
+    try {
+      const res = await fetch("/api/export");
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `agendor-backup-${new Date().toISOString().split("T")[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success("Backup exportado com sucesso");
+    } catch {
+      toast.error("Erro ao exportar backup");
+    }
+  }
 
   const now = new Date();
   const currentMonthName = MONTH_NAMES[now.getMonth()];
@@ -109,14 +139,36 @@ export default function DashboardPage() {
 
   if (loading) return (
     <div className="min-h-screen bg-gray-50">
-      <PageHeader title="Dra. Priscila Agendor" />
+      <PageHeader
+        title="Dra. Priscila Agendor"
+        rightAction={
+          <button
+            aria-label="Exportar backup"
+            onClick={handleDownload}
+            className="p-1.5 rounded-lg text-gray-400 active:bg-gray-100 transition-colors"
+          >
+            <Download size={20} />
+          </button>
+        }
+      />
       <DashboardSkeleton />
     </div>
   );
 
   if (error) return (
     <div className="min-h-screen bg-gray-50">
-      <PageHeader title="Dra. Priscila Agendor" />
+      <PageHeader
+        title="Dra. Priscila Agendor"
+        rightAction={
+          <button
+            aria-label="Exportar backup"
+            onClick={handleDownload}
+            className="p-1.5 rounded-lg text-gray-400 active:bg-gray-100 transition-colors"
+          >
+            <Download size={20} />
+          </button>
+        }
+      />
       <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
         <p className="text-gray-500 mb-4">Não foi possível carregar os dados.</p>
         <Button variant="outline" onClick={load}>Tentar novamente</Button>
@@ -126,7 +178,18 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <PageHeader title="Dra. Priscila Agendor" />
+      <PageHeader
+        title="Dra. Priscila Agendor"
+        rightAction={
+          <button
+            aria-label="Exportar backup"
+            onClick={handleDownload}
+            className="p-1.5 rounded-lg text-gray-400 active:bg-gray-100 transition-colors"
+          >
+            <Download size={20} />
+          </button>
+        }
+      />
 
       <div className="px-4 pt-4 pb-28 space-y-4">
 

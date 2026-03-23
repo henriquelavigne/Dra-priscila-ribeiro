@@ -49,10 +49,12 @@ function WorkplaceGroup({
   group,
   onResolve,
   onRegisterPayment,
+  resolvingIds,
 }: {
   group: AutoNoteGroup;
   onResolve: (id: string) => void;
   onRegisterPayment: () => void;
+  resolvingIds: Set<string>;
 }) {
   const [expanded, setExpanded] = useState(true);
   const oldestDays = daysDiff(group.oldestDueDate);
@@ -95,12 +97,17 @@ function WorkplaceGroup({
       {expanded && (
         <div className="border-t border-gray-100 divide-y divide-gray-50">
           {group.notes.map((note) => {
+            const isResolving = resolvingIds.has(note.id);
             const days = daysDiff(note.dueDate);
             const shiftDate = new Date(note.shift.date).toLocaleDateString("pt-BR", {
               timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric",
             });
             return (
-              <div key={note.id} className="px-4 py-3 bg-gray-50 space-y-1">
+              <div
+                key={note.id}
+                className="px-4 py-3 bg-gray-50 space-y-1 transition-opacity duration-300"
+                style={{ opacity: isResolving ? 0 : 1 }}
+              >
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm text-gray-700">Plantão: {shiftDate}</p>
                   <span className="text-xs text-gray-400">
@@ -143,6 +150,7 @@ function WorkplaceGroup({
 export function AutoNoteSection({ open, onClose, onRefresh }: AutoNoteSectionProps) {
   const [groups, setGroups] = useState<AutoNoteGroup[]>([]);
   const [loading, setLoading] = useState(false);
+  const [resolvingIds, setResolvingIds] = useState<Set<string>>(new Set());
 
   async function loadNotes() {
     setLoading(true);
@@ -162,14 +170,20 @@ export function AutoNoteSection({ open, onClose, onRefresh }: AutoNoteSectionPro
   }, [open]);
 
   async function handleResolve(id: string) {
+    setResolvingIds((prev) => new Set(prev).add(id));
     try {
       const res = await fetch(`/api/auto-notes/${id}/resolve`, { method: "PATCH" });
       if (!res.ok) throw new Error();
       toast.success("Pendência resolvida");
-      loadNotes();
-      onRefresh();
+      // Brief delay so the fade animation plays before the item disappears
+      setTimeout(() => {
+        loadNotes();
+        onRefresh();
+        setResolvingIds((prev) => { const s = new Set(prev); s.delete(id); return s; });
+      }, 400);
     } catch {
       toast.error("Erro ao resolver pendência");
+      setResolvingIds((prev) => { const s = new Set(prev); s.delete(id); return s; });
     }
   }
 
@@ -205,6 +219,7 @@ export function AutoNoteSection({ open, onClose, onRefresh }: AutoNoteSectionPro
                 group={group}
                 onResolve={handleResolve}
                 onRegisterPayment={handleRegisterPayment}
+                resolvingIds={resolvingIds}
               />
             ))}
           </div>

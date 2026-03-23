@@ -49,6 +49,15 @@ export default function WorkplacesPage() {
     loadWorkplaces();
   }, [loadWorkplaces]);
 
+  // Revalidate auto-note counts when user returns to tab
+  useEffect(() => {
+    function onVisible() {
+      if (document.visibilityState === "visible") loadWorkplaces();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [loadWorkplaces]);
+
   function handleCreate() {
     setEditingWorkplace(undefined);
     setFormOpen(true);
