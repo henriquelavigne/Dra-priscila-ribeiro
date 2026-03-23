@@ -4,7 +4,8 @@ export type SystemSettings = {
   botPhoneNumber: string;
   botName: string;
   botLastSeen: string;  // ISO timestamp, vazio se nunca conectou
-  botStatus: string;    // "online" | "" (vazio = desconhecido)
+  botStatus: string;    // "online" | "waiting_scan" | "" (vazio = desconhecido)
+  botQrCode: string;    // data URL PNG do QR, vazio quando conectado
 };
 
 const DEFAULTS: SystemSettings = {
@@ -12,6 +13,7 @@ const DEFAULTS: SystemSettings = {
   botName: "Agendor",
   botLastSeen: "",
   botStatus: "",
+  botQrCode: "",
 };
 
 export async function getSettings(): Promise<SystemSettings> {
@@ -23,6 +25,7 @@ export async function getSettings(): Promise<SystemSettings> {
     botName: map["botName"] ?? DEFAULTS.botName,
     botLastSeen: map["botLastSeen"] ?? DEFAULTS.botLastSeen,
     botStatus: map["botStatus"] ?? DEFAULTS.botStatus,
+    botQrCode: map["botQrCode"] ?? DEFAULTS.botQrCode,
   };
 }
 

@@ -26,3 +26,25 @@ export async function sendHeartbeat(): Promise<void> {
     // Silencioso — falha de heartbeat não deve interromper o bot
   }
 }
+
+export async function uploadQrCode(dataUrl: string): Promise<void> {
+  try {
+    await apiClient.put("/settings", {
+      botQrCode: dataUrl,
+      botStatus: "waiting_scan",
+    });
+  } catch {
+    // Silencioso
+  }
+}
+
+export async function clearQrCode(): Promise<void> {
+  try {
+    await apiClient.put("/settings", {
+      botQrCode: "",
+      botStatus: "online",
+    });
+  } catch {
+    // Silencioso
+  }
+}

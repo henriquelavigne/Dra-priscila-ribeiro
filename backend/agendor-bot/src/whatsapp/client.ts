@@ -7,6 +7,7 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 import { Boom } from "@hapi/boom";
 import qrcode from "qrcode-terminal";
+import QRCode from "qrcode";
 import pino from "pino";
 import * as fs from "fs";
 import * as path from "path";
@@ -15,6 +16,7 @@ import { config } from "../config/index.js";
 import { logger } from "../utils/logger.js";
 import { handleMessage } from "./handler.js";
 import { useSupabaseAuthState } from "./auth-store.js";
+import { uploadQrCode, clearQrCode } from "../api/settings.js";
 
 const AUTH_DIR = path.resolve("./auth_info");
 
@@ -56,16 +58,20 @@ export async function initWhatsApp(): Promise<void> {
     version,
   });
 
-  sock.ev.on("connection.update", (update) => {
+  sock.ev.on("connection.update", async (update) => {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
       logger.info("[WhatsApp] Escaneie o QR Code abaixo:");
       qrcode.generate(qr, { small: true });
+      QRCode.toDataURL(qr, { scale: 6 })
+        .then((dataUrl) => uploadQrCode(dataUrl))
+        .catch(() => {});
     }
 
     if (connection === "open") {
       logger.info("✓ WhatsApp conectado com sucesso");
+      await clearQrCode();
     }
 
     if (connection === "close") {

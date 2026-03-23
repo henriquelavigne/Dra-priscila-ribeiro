@@ -21,6 +21,7 @@ type Settings = {
   botName: string;
   botLastSeen: string;
   botStatus: string;
+  botQrCode: string;
 };
 
 type ConnectionStatus = "online" | "unstable" | "offline" | "unknown";
@@ -91,6 +92,7 @@ export default function SettingsPage() {
     botName: "Agendor",
     botLastSeen: "",
     botStatus: "",
+    botQrCode: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -105,6 +107,7 @@ export default function SettingsPage() {
         botName: data.botName ?? "Agendor",
         botLastSeen: data.botLastSeen ?? "",
         botStatus: data.botStatus ?? "",
+        botQrCode: data.botQrCode ?? "",
       });
     } catch {
       toast.error("Erro ao carregar configurações. Verifique a conexão.");
@@ -115,8 +118,8 @@ export default function SettingsPage() {
 
   useEffect(() => {
     loadSettings();
-    // Auto-refresh para atualizar status do bot
-    const interval = setInterval(loadSettings, 30_000);
+    // Polling mais rápido (10s) para capturar QR code assim que o bot inicializa
+    const interval = setInterval(loadSettings, 10_000);
     return () => clearInterval(interval);
   }, [loadSettings]);
 
@@ -180,6 +183,24 @@ export default function SettingsPage() {
             <Icon size={16} className={color} />
           </div>
 
+          {/* QR Code para scan */}
+          {!loading && settings.botQrCode && connStatus !== "online" && (
+            <div className="mb-4 flex flex-col items-center gap-2 bg-slate-50 rounded-xl p-4">
+              <p className="text-xs font-semibold text-slate-600 mb-1">
+                Escaneie com o WhatsApp da Dra. Priscila
+              </p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={settings.botQrCode}
+                alt="QR Code WhatsApp"
+                className="w-48 h-48 rounded-lg"
+              />
+              <p className="text-xs text-slate-400 text-center">
+                Abra o WhatsApp → Configurações → Aparelhos conectados → Conectar aparelho
+              </p>
+            </div>
+          )}
+
           {loading ? (
             <SkeletonField />
           ) : (
@@ -222,10 +243,10 @@ export default function SettingsPage() {
           <ol className="space-y-2 text-sm text-slate-600 list-none">
             {[
               "Configure o número acima e salve",
-              "Acesse railway.app e faça o deploy do serviço agendor-bot",
-              "Nos logs do Railway, escaneie o QR Code com o WhatsApp",
-              "O indicador de status ficará verde quando o bot conectar",
-              "A partir daí, envie mensagens para o número configurado",
+              "Faça o deploy do bot no Railway (ou reinicie o serviço)",
+              "O QR Code aparecerá aqui em até 30 segundos",
+              "Escaneie com o WhatsApp → Configurações → Aparelhos conectados",
+              "O indicador ficará verde e o QR sumirá automaticamente",
             ].map((step, i) => (
               <li key={i} className="flex items-start gap-2.5">
                 <span className="flex-shrink-0 w-5 h-5 rounded-full bg-sand-dark text-slate-700 text-xs flex items-center justify-center font-semibold mt-0.5">
