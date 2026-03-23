@@ -22,7 +22,7 @@ const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
-          throw new Error("Usuário e senha são obrigatórios");
+          return null;
         }
 
         const user = await prisma.user.findUnique({
@@ -30,22 +30,70 @@ const authOptions: AuthOptions = {
         });
 
         if (!user) {
-          throw new Error("Usuário não encontrado");
+          return null;
         }
 
         const isValid = await bcrypt.compare(credentials.password, user.password);
 
         if (!isValid) {
-          throw new Error("Senha incorreta");
+          return null;
         }
 
+        // NextAuth exige que o objeto retornado tenha `id` e `email`
+        // Como removemos email do schema, usamos um stub
         return {
           id: user.id,
           name: user.username,
+          email: `${user.username}@app.local`,
         };
       },
     }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.name = token.name as string;
+        // Remove o email fake da sessão exposta ao client
+        session.user.email = undefined;
+      }
+      return session;
+    },
+  },
+  cookies: {
+    sessionToken: {
+      name: `priscila-agendor.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    callbackUrl: {
+      name: `priscila-agendor.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+    csrfToken: {
+      name: `priscila-agendor.csrf-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+      },
+    },
+  },
   pages: {
     signIn: "/login",
     error: "/login",
@@ -56,3 +104,4 @@ const authOptions: AuthOptions = {
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
+

@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Eye } from "lucide-react";
 
+import Image from "next/image";
+
 export default function LoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -14,6 +16,7 @@ export default function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(false); // No-op, just to keep structure but avoid infinite loading state inside subagent testing if any
     setLoading(true);
 
     const res = await signIn("credentials", {
@@ -36,15 +39,21 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Header/Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-gold rounded-2xl flex items-center justify-center mb-4 shadow-luxury">
-            <Eye className="text-white" size={32} />
+          <div className="w-20 h-20 relative mb-4 hover-scale duration-300">
+            <Image 
+              src="/logo.png" 
+              alt="Logo Dra. Priscila" 
+              fill 
+              unoptimized
+              className="object-cover rounded-full shadow-luxury border border-sand-dark/50"
+            />
           </div>
           <h1 className="text-2xl font-serif font-bold text-slate-900 text-center tracking-tight">Dra. Priscila Agendor</h1>
-          <p className="text-slate-500 mt-1 font-medium">Gestão de Plantões</p>
+          <p className="text-slate-500 mt-1 font-medium text-sm">Gestão de Plantões</p>
         </div>
 
         {/* Card de Login */}
-        <div className="bg-white rounded-[20px] p-6 shadow-luxury border border-sand-dark/50">
+        <div className="bg-white rounded-[20px] p-6 shadow-luxury border border-sand-dark/50 hover-lift">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-slate-700">Usuário</label>

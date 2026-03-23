@@ -12,6 +12,11 @@ export default withAuth(
     pages: {
       signIn: "/login",
     },
+    cookies: {
+      sessionToken: {
+        name: `priscila-agendor.session-token`,
+      },
+    },
   }
 );
 

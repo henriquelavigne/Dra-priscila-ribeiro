@@ -1,0 +1,9 @@
+.vercel
+.env.vercel
+
+# Claude
+.claude/
+
+# Scripts utilitários locais
+frontend/check_users.js
+frontend/seed-admin.js
