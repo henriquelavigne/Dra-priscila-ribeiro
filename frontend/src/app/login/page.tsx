@@ -8,7 +8,7 @@ import { Eye } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,13 +17,13 @@ export default function LoginPage() {
     setLoading(true);
 
     const res = await signIn("credentials", {
-      email,
+      username,
       password,
       redirect: false,
     });
 
     if (res?.error) {
-      toast.error(res.error);
+      toast.error("Usuário ou senha incorretos");
       setLoading(false);
     } else {
       router.push("/dashboard");
@@ -47,17 +47,18 @@ export default function LoginPage() {
         <div className="bg-white rounded-[20px] p-6 shadow-luxury border border-sand-dark/50">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-slate-700">E-mail</label>
+              <label className="text-sm font-medium text-slate-700">Usuário</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
+                autoComplete="username"
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all bg-sand-light/30"
-                placeholder="dr@clinica.com"
+                placeholder="priscila"
               />
             </div>
-            
+
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-slate-700">Senha</label>
               <input
@@ -65,6 +66,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
                 className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all bg-sand-light/30"
                 placeholder="••••••••"
               />

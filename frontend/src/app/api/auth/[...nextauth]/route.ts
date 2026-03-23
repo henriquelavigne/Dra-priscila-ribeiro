@@ -17,16 +17,16 @@ const authOptions: AuthOptions = {
     CredentialsProvider({
       name: "Credenciais",
       credentials: {
-        email: { label: "E-mail", type: "email" },
+        username: { label: "Usuário", type: "text" },
         password: { label: "Senha", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("E-mail e senha são obrigatórios");
+        if (!credentials?.username || !credentials?.password) {
+          throw new Error("Usuário e senha são obrigatórios");
         }
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { username: credentials.username },
         });
 
         if (!user) {
@@ -41,8 +41,7 @@ const authOptions: AuthOptions = {
 
         return {
           id: user.id,
-          email: user.email,
-          name: user.name,
+          name: user.username,
         };
       },
     }),
