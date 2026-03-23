@@ -1,7 +1,7 @@
-import type { Workplace, Shift, AuditLog, Prisma } from "@prisma/client";
+import type { Workplace, Shift, AuditLog, Payment, AutoNote, Prisma } from "@prisma/client";
 
 // Re-exports
-export type { Workplace, Shift, AuditLog };
+export type { Workplace, Shift, AuditLog, Payment, AutoNote };
 
 // Relations
 export type WorkplaceWithShifts = Workplace & {
@@ -10,6 +10,25 @@ export type WorkplaceWithShifts = Workplace & {
 
 export type ShiftWithWorkplace = Shift & {
   workplace: Workplace;
+};
+
+export type PaymentWithShift = Payment & {
+  shift: Shift & {
+    workplace: Workplace;
+  };
+};
+
+export type AutoNoteWithDetails = AutoNote & {
+  workplace: Workplace;
+  shift: Shift & {
+    workplace: Workplace;
+  };
+};
+
+export type ShiftWithPaymentStatus = Shift & {
+  workplace: Workplace;
+  payment: Payment | null;
+  paymentStatus: "paid" | "partial" | "overdue" | "on_schedule" | "not_due";
 };
 
 // Inputs
@@ -38,6 +57,29 @@ export type UpdateShiftInput = {
   actualValue?: number;
   status?: "scheduled" | "completed" | "cancelled";
   notes?: string;
+};
+
+export type CreatePaymentInput = {
+  shiftId: string;
+  amountReceived: number;
+  paymentDate: string; // ISO date string "YYYY-MM-DD"
+  notes?: string;
+};
+
+// Finance
+export type FinanceFilters = {
+  status?: "all" | "pending" | "paid";
+  month?: number;
+  year?: number;
+  workplaceId?: string;
+};
+
+export type FinanceSummary = {
+  totalExpected: number;
+  totalReceived: number;
+  totalPending: number;
+  overdueCount: number;
+  partialCount: number;
 };
 
 // Dashboard

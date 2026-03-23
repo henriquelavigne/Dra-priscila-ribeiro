@@ -50,7 +50,19 @@ export const updateShiftSchema = z.object({
   notes: z.string().optional(),
 });
 
+export const paymentSchema = z.object({
+  shiftId: z.string().uuid("ID do plantão inválido"),
+  amountReceived: z
+    .number("Valor deve ser um número")
+    .positive("Valor deve ser positivo"),
+  paymentDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Data deve estar no formato YYYY-MM-DD"),
+  notes: z.string().optional(),
+});
+
 export type WorkplaceSchema = z.infer<typeof workplaceSchema>;
 export type UpdateWorkplaceSchema = z.infer<typeof updateWorkplaceSchema>;
 export type ShiftSchema = z.infer<typeof shiftSchema>;
 export type UpdateShiftSchema = z.infer<typeof updateShiftSchema>;
+export type PaymentSchema = z.infer<typeof paymentSchema>;
