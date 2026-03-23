@@ -1,8 +1,8 @@
-import { logger } from "../utils/logger";
-import type { AgentResponse, ExecutionResult } from "../ai/agent";
-import { executeCreate } from "./create";
-import { executeCancel } from "./cancel";
-import { formatSuccessMessage, formatErrorMessage, formatPartialMessage } from "../utils/formatter";
+import { logger } from "../utils/logger.js";
+import type { AgentResponse, ExecutionResult } from "../ai/agent.js";
+import { executeCreate } from "./create.js";
+import { executeCancel } from "./cancel.js";
+import { formatSuccessMessage, formatErrorMessage, formatPartialMessage } from "../utils/formatter.js";
 
 export async function executeActions(response: AgentResponse): Promise<string> {
   // Não entendeu o comando

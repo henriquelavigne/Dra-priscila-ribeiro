@@ -1,6 +1,6 @@
-import { api } from "./client";
-import { logger } from "../utils/logger";
-import type { Payment, CreatePaymentInput, FinanceSummary, DashboardResponse, AutoNote } from "./types";
+import { api } from "./client.js";
+import { logger } from "../utils/logger.js";
+import type { Payment, CreatePaymentInput, FinanceSummary, DashboardResponse, AutoNote } from "./types.js";
 
 export async function listPayments(params?: {
   status?: string;

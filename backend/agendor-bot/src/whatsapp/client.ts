@@ -11,10 +11,10 @@ import pino from "pino";
 import * as fs from "fs";
 import * as path from "path";
 
-import { config } from "../config";
-import { logger } from "../utils/logger";
-import { handleMessage } from "./handler";
-import { useSupabaseAuthState } from "./auth-store";
+import { config } from "../config/index.js";
+import { logger } from "../utils/logger.js";
+import { handleMessage } from "./handler.js";
+import { useSupabaseAuthState } from "./auth-store.js";
 
 const AUTH_DIR = path.resolve("./auth_info");
 

@@ -1,13 +1,13 @@
 import type { WAMessage, WASocket } from "@whiskeysockets/baileys";
 import { downloadMediaMessage } from "@whiskeysockets/baileys";
-import { config } from "../config";
-import { logger } from "../utils/logger";
-import { sendMessage, sendTyping, stopTyping } from "./sender";
-import { transcribeAudio } from "../ai/transcriber";
-import { processCommand } from "../ai/agent";
-import { executeActions } from "../executor";
-import { executeQuery } from "../executor/query";
-import { handleSimulation, checkPendingSimulation } from "../executor/simulate";
+import { config } from "../config/index.js";
+import { logger } from "../utils/logger.js";
+import { sendMessage, sendTyping, stopTyping } from "./sender.js";
+import { transcribeAudio } from "../ai/transcriber.js";
+import { processCommand } from "../ai/agent.js";
+import { executeActions } from "../executor/index.js";
+import { executeQuery } from "../executor/query.js";
+import { handleSimulation, checkPendingSimulation } from "../executor/simulate.js";
 
 // ─── Rate limiting ─────────────────────────────────────────────────────────────
 const RATE_WINDOW_MS = 10_000;

@@ -1,8 +1,8 @@
 import cron from "node-cron";
-import { logger } from "../utils/logger";
-import { config } from "../config";
-import { sendWeeklyNotification } from "./weekly";
-import { sendHeartbeat } from "../api/settings";
+import { logger } from "../utils/logger.js";
+import { config } from "../config/index.js";
+import { sendWeeklyNotification } from "./weekly.js";
+import { sendHeartbeat } from "../api/settings.js";
 
 const DAY_NAMES = ["domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"];
 

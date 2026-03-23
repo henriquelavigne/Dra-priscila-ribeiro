@@ -1,8 +1,8 @@
-import { config } from "./config";
-import { logger } from "./utils/logger";
-import { initWhatsApp } from "./whatsapp/client";
-import { initCron } from "./notifications/cron";
-import { fetchRemoteSettings } from "./api/settings";
+import { config } from "./config/index.js";
+import { logger } from "./utils/logger.js";
+import { initWhatsApp } from "./whatsapp/client.js";
+import { initCron } from "./notifications/cron.js";
+import { fetchRemoteSettings } from "./api/settings.js";
 
 function formatJid(phone: string): string {
   const clean = phone.replace(/\D/g, "");

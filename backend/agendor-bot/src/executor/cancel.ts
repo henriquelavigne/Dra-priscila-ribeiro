@@ -1,6 +1,6 @@
-import { logger } from "../utils/logger";
-import { fetchShiftsByDateRange, cancelShift } from "../api/shifts";
-import type { AgentAction, ExecutionResult } from "../ai/agent";
+import { logger } from "../utils/logger.js";
+import { fetchShiftsByDateRange, cancelShift } from "../api/shifts.js";
+import type { AgentAction, ExecutionResult } from "../ai/agent.js";
 
 async function cancelForDate(
   date: string,

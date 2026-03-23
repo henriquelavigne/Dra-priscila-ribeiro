@@ -1,5 +1,5 @@
-import { apiClient } from "./client";
-import { logger } from "../utils/logger";
+import { apiClient } from "./client.js";
+import { logger } from "../utils/logger.js";
 
 type RemoteSettings = {
   botPhoneNumber: string;

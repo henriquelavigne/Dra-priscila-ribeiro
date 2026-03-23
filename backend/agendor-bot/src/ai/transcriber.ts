@@ -2,8 +2,8 @@ import OpenAI from "openai";
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
-import { config } from "../config";
-import { logger } from "../utils/logger";
+import { config } from "../config/index.js";
+import { logger } from "../utils/logger.js";
 
 const openai = new OpenAI({ apiKey: config.openaiApiKey });
 

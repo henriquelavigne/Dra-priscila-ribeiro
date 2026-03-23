@@ -1,5 +1,5 @@
 import type { WASocket } from "@whiskeysockets/baileys";
-import { config } from "../config";
+import { config } from "../config/index.js";
 
 export async function sendMessage(sock: WASocket, text: string): Promise<void> {
   await sock.sendMessage(config.draPhoneNumber, { text });

@@ -1,5 +1,5 @@
-import type { Workplace, Shift } from "../api/types";
-import { getCurrentDateInfo, formatDatePtBr, getDayOfWeekShort, formatCurrency } from "../utils/dates";
+import type { Workplace, Shift } from "../api/types.js";
+import { getCurrentDateInfo, formatDatePtBr, getDayOfWeekShort, formatCurrency } from "../utils/dates.js";
 
 export const SYSTEM_PROMPT = `Você é o Agendor, assistente pessoal da Dra. Priscila Ribeiro, oftalmologista. Seu papel é interpretar comandos em linguagem natural sobre a agenda de plantões e retornar ações estruturadas em JSON.
 

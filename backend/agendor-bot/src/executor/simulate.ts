@@ -1,8 +1,8 @@
-import { logger } from "../utils/logger";
-import { config } from "../config";
-import { formatCurrency } from "../utils/dates";
-import type { AgentAction, AgentResponse } from "../ai/agent";
-import { executeActions } from "./index";
+import { logger } from "../utils/logger.js";
+import { config } from "../config/index.js";
+import { formatCurrency } from "../utils/dates.js";
+import type { AgentAction, AgentResponse } from "../ai/agent.js";
+import { executeActions } from "./index.js";
 
 const SIMULATION_TTL_MS = 5 * 60 * 1000; // 5 minutos
 

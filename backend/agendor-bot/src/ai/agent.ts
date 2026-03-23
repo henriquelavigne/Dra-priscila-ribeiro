@@ -1,10 +1,10 @@
 import OpenAI from "openai";
-import { config } from "../config";
-import { logger } from "../utils/logger";
-import { getCurrentMonthYear, getNextMonth } from "../utils/dates";
-import { fetchActiveWorkplaces } from "../api/workplaces";
-import { fetchShiftsByMonth } from "../api/shifts";
-import { buildSystemPrompt, buildContext } from "./prompts";
+import { config } from "../config/index.js";
+import { logger } from "../utils/logger.js";
+import { getCurrentMonthYear, getNextMonth } from "../utils/dates.js";
+import { fetchActiveWorkplaces } from "../api/workplaces.js";
+import { fetchShiftsByMonth } from "../api/shifts.js";
+import { buildSystemPrompt, buildContext } from "./prompts.js";
 
 const openai = new OpenAI({ apiKey: config.openaiApiKey });
 

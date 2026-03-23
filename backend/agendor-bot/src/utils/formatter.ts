@@ -1,7 +1,7 @@
-import { formatDateBR, formatCurrency, formatDatePtBr, getDayOfWeekShort } from "./dates";
-import type { Shift, Workplace, DashboardResponse, FinanceSummary } from "../api/types";
-import type { ExecutionResult } from "../ai/agent";
-import type { AgentError } from "../ai/agent";
+import { formatDateBR, formatCurrency, formatDatePtBr, getDayOfWeekShort } from "./dates.js";
+import type { Shift, Workplace, DashboardResponse, FinanceSummary } from "../api/types.js";
+import type { ExecutionResult } from "../ai/agent.js";
+import type { AgentError } from "../ai/agent.js";
 
 // ─── Shift list (agenda) ──────────────────────────────────────────────────────
 

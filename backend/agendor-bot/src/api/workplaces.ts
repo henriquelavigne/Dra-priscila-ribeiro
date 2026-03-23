@@ -1,6 +1,6 @@
-import { api } from "./client";
-import { logger } from "../utils/logger";
-import type { Workplace } from "./types";
+import { api } from "./client.js";
+import { logger } from "../utils/logger.js";
+import type { Workplace } from "./types.js";
 
 export async function listWorkplaces(activeOnly = true): Promise<Workplace[]> {
   const { data } = await api.get("/workplaces", {

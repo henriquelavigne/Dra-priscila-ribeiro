@@ -1,8 +1,8 @@
-import { logger } from "../utils/logger";
-import { createShift } from "../api/shifts";
-import { fetchActiveWorkplaces } from "../api/workplaces";
-import { formatCurrency } from "../utils/dates";
-import type { AgentAction, ExecutionResult } from "../ai/agent";
+import { logger } from "../utils/logger.js";
+import { createShift } from "../api/shifts.js";
+import { fetchActiveWorkplaces } from "../api/workplaces.js";
+import { formatCurrency } from "../utils/dates.js";
+import type { AgentAction, ExecutionResult } from "../ai/agent.js";
 
 export async function executeCreate(action: AgentAction): Promise<ExecutionResult> {
   if (!action.workplace_id) {

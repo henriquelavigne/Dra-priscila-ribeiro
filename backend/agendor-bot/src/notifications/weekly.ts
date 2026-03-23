@@ -1,10 +1,10 @@
-import { logger } from "../utils/logger";
-import { triggerAutoNotesCheck, fetchAutoNotes } from "../api/finances";
-import { formatCurrency } from "../utils/dates";
-import { getSocket } from "../whatsapp/client";
-import { sendMessage } from "../whatsapp/sender";
-import { config } from "../config";
-import type { AutoNote } from "../api/types";
+import { logger } from "../utils/logger.js";
+import { triggerAutoNotesCheck, fetchAutoNotes } from "../api/finances.js";
+import { formatCurrency } from "../utils/dates.js";
+import { getSocket } from "../whatsapp/client.js";
+import { sendMessage } from "../whatsapp/sender.js";
+import { config } from "../config/index.js";
+import type { AutoNote } from "../api/types.js";
 
 interface WorkplaceGroup {
   workplaceId: string;

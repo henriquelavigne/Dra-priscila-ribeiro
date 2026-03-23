@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { initAuthCreds, BufferJSON } from "@whiskeysockets/baileys";
 import type { AuthenticationState, SignalDataTypeMap } from "@whiskeysockets/baileys";
-import { config } from "../config";
-import { logger } from "../utils/logger";
+import { config } from "../config/index.js";
+import { logger } from "../utils/logger.js";
 
 const SESSION_ID = "baileys_auth";
 

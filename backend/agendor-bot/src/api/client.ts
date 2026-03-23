@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { config } from "../config";
-import { logger } from "../utils/logger";
+import { config } from "../config/index.js";
+import { logger } from "../utils/logger.js";
 
 export const api = axios.create({
   baseURL: config.apiBaseUrl,

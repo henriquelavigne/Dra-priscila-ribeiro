@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Bot WhatsApp para Dra. Priscila - Agendor",
   "main": "dist/index.js",
+  "type": "module",
   "engines": {
     "node": ">=20.0.0"
   },

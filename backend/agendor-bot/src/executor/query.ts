@@ -1,4 +1,4 @@
-import type { AgentResponse } from "../ai/agent";
+import type { AgentResponse } from "../ai/agent.js";
 
 export function executeQuery(response: AgentResponse): string {
   if (response.query_response) {

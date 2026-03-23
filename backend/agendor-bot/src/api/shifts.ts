@@ -1,6 +1,6 @@
-import { api } from "./client";
-import { logger } from "../utils/logger";
-import type { Shift, CreateShiftInput } from "./types";
+import { api } from "./client.js";
+import { logger } from "../utils/logger.js";
+import type { Shift, CreateShiftInput } from "./types.js";
 
 export async function listShifts(params?: {
   month?: number;
