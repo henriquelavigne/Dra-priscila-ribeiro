@@ -3,6 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
+// Detecta URL automaticamente no Vercel quando NEXTAUTH_URL não está definido
+if (!process.env.NEXTAUTH_URL && process.env.VERCEL_URL) {
+  process.env.NEXTAUTH_URL = `https://${process.env.VERCEL_URL}`;
+}
+
 const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",

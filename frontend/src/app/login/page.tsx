@@ -39,7 +39,7 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-gold rounded-2xl flex items-center justify-center mb-4 shadow-luxury">
             <Eye className="text-white" size={32} />
           </div>
-          <h1 className="text-3xl font-serif font-bold text-slate-900 text-center tracking-tight">OphthaClin</h1>
+          <h1 className="text-2xl font-serif font-bold text-slate-900 text-center tracking-tight">Dra. Priscila Agendor</h1>
           <p className="text-slate-500 mt-1 font-medium">Gestão de Plantões</p>
         </div>
 
