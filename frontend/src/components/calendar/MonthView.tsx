@@ -74,6 +74,7 @@ export function MonthView({
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
         <button
           onClick={onPrevMonth}
+          aria-label="Mês anterior"
           className="p-1.5 rounded-lg active:bg-gray-100 transition-colors"
         >
           <ChevronLeft size={20} className="text-gray-600" />
@@ -83,6 +84,7 @@ export function MonthView({
         </span>
         <button
           onClick={onNextMonth}
+          aria-label="Próximo mês"
           className="p-1.5 rounded-lg active:bg-gray-100 transition-colors"
         >
           <ChevronRight size={20} className="text-gray-600" />

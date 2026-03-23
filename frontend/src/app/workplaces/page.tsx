@@ -7,6 +7,7 @@ import { WorkplaceCard } from "@/components/workplace/WorkplaceCard";
 import { WorkplaceForm } from "@/components/workplace/WorkplaceForm";
 import { Button } from "@/components/ui/button";
 import type { Workplace } from "@/types";
+import { toast } from "sonner";
 
 function SkeletonCard() {
   return (
@@ -37,7 +38,7 @@ export default function WorkplacesPage() {
       const data = await res.json();
       setWorkplaces(data);
     } catch {
-      // silent
+      toast.error("Erro de conexão. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -69,6 +70,7 @@ export default function WorkplacesPage() {
         rightAction={
           <Button
             size="icon"
+            aria-label="Adicionar local de trabalho"
             className="bg-[#0F172A] hover:bg-[#1e293b] text-white rounded-full w-9 h-9"
             onClick={handleCreate}
           >

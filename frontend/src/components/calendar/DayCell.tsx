@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { cn } from "@/lib/utils";
 import { ShiftBlock, type CalendarShift } from "./ShiftBlock";
 
@@ -11,7 +12,7 @@ interface DayCellProps {
   onClick: (date: Date) => void;
 }
 
-export function DayCell({
+export const DayCell = memo(function DayCell({
   date,
   shifts,
   isCurrentMonth,
@@ -21,10 +22,13 @@ export function DayCell({
   const visible = shifts.slice(0, 3);
   const overflow = shifts.length - 3;
 
+  const dateLabel = date.toLocaleDateString("pt-BR", { day: "numeric", month: "long", year: "numeric" });
+
   return (
     <button
+      aria-label={`${dateLabel}${shifts.length > 0 ? `, ${shifts.length} plantão(ões)` : ""}`}
       className={cn(
-        "min-h-[64px] w-full text-left p-1 border-b border-r border-gray-100 flex flex-col gap-0.5 active:bg-gray-50 transition-colors",
+        "min-h-[64px] w-full text-left p-1 border-b border-r border-gray-100 flex flex-col gap-0.5 active:bg-gray-50 transition-colors overflow-hidden",
         !isCurrentMonth && "opacity-30"
       )}
       onClick={() => onClick(date)}
@@ -51,4 +55,4 @@ export function DayCell({
       </div>
     </button>
   );
-}
+});

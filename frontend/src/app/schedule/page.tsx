@@ -9,6 +9,8 @@ import { ShiftForm } from "@/components/shift/ShiftForm";
 import { DayConflictAlert } from "@/components/shift/DayConflictAlert";
 import type { CalendarShift } from "@/components/calendar/ShiftBlock";
 import type { Workplace } from "@/types";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MONTH_NAMES_SHORT = [
   "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
@@ -44,6 +46,7 @@ export default function SchedulePage() {
       const data: CalendarShift[] = await res.json();
       setShifts(data);
     } catch {
+      toast.error("Erro de conexão. Tente novamente.");
       setShifts([]);
     } finally {
       setLoadingShifts(false);
@@ -164,7 +167,29 @@ export default function SchedulePage() {
 
       <div className="pb-32">
         {loadingShifts ? (
-          <div className="h-[420px] bg-white animate-pulse" />
+          <div className="bg-white">
+            {/* Header skeleton */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+              <Skeleton className="w-8 h-8 rounded-lg" />
+              <Skeleton className="w-32 h-5 rounded" />
+              <Skeleton className="w-8 h-8 rounded-lg" />
+            </div>
+            {/* Week days skeleton */}
+            <div className="grid grid-cols-7 border-b border-gray-100 py-2">
+              {Array.from({ length: 7 }).map((_, i) => (
+                <Skeleton key={i} className="mx-auto w-6 h-3 rounded" />
+              ))}
+            </div>
+            {/* Grid skeleton */}
+            <div className="grid grid-cols-7">
+              {Array.from({ length: 35 }).map((_, i) => (
+                <div key={i} className="min-h-[64px] border-b border-r border-gray-100 p-1">
+                  <Skeleton className="w-5 h-5 rounded-full mb-1" />
+                  {i % 5 === 0 && <Skeleton className="w-full h-3 rounded-sm" />}
+                </div>
+              ))}
+            </div>
+          </div>
         ) : (
           <MonthView
             year={year}

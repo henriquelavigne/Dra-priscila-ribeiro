@@ -38,6 +38,7 @@ export function BottomNav() {
             <Link
               key={href}
               href={href}
+              aria-label={label}
               className={cn(
                 "flex flex-col items-center gap-1 flex-1 py-2 transition-colors",
                 isActive ? "text-[#0F172A]" : "text-gray-400"

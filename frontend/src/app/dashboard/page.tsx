@@ -1,12 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { TrendingUp, Calendar, Briefcase } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { TrendingUp, Calendar, Briefcase, Building2 } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { UpcomingShifts } from "@/components/dashboard/UpcomingShifts";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import type { ShiftWithWorkplace } from "@/types";
+import { toast } from "sonner";
 
 const MONTH_NAMES = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -20,15 +24,60 @@ interface DashboardData {
   upcomingShifts: ShiftWithWorkplace[];
 }
 
+function DashboardSkeleton() {
+  return (
+    <div className="px-4 pt-4 pb-28 space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3">
+          <Skeleton className="h-3 w-24 rounded" />
+          <Skeleton className="h-7 w-32 rounded" />
+        </div>
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3">
+          <Skeleton className="h-3 w-24 rounded" />
+          <Skeleton className="h-7 w-32 rounded" />
+        </div>
+      </div>
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-3">
+        <Skeleton className="h-3 w-28 rounded" />
+        <Skeleton className="h-7 w-10 rounded" />
+      </div>
+      <div className="space-y-2">
+        <Skeleton className="h-5 w-36 rounded" />
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          {[1, 2, 3].map((i) => (
+            <div key={i}>
+              <div className="flex items-center gap-3 px-4 py-3">
+                <Skeleton className="w-3 h-3 rounded-full" />
+                <Skeleton className="h-4 flex-1 rounded" />
+                <Skeleton className="h-4 w-14 rounded" />
+                <Skeleton className="h-4 w-16 rounded" />
+              </div>
+              {i < 3 && <div className="h-px bg-gray-100 mx-4" />}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
+  const router = useRouter();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     fetch("/api/dashboard")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error();
+        return r.json();
+      })
       .then((d: DashboardData) => setData(d))
-      .catch(() => setData(null))
+      .catch(() => {
+        setError(true);
+        toast.error("Erro de conexão. Tente novamente.");
+      })
       .finally(() => setLoading(false));
   }, []);
 
@@ -37,46 +86,88 @@ export default function DashboardPage() {
   const nextMonthIdx = (now.getMonth() + 1) % 12;
   const nextMonthName = MONTH_NAMES[nextMonthIdx];
 
-  const currentRevenue = formatCurrency(Number(data?.currentMonthRevenue ?? 0));
-  const nextRevenue = formatCurrency(Number(data?.nextMonthRevenue ?? 0));
-  const shiftCount = String(data?.currentMonthShiftCount ?? 0);
+  const isEmpty =
+    !loading &&
+    !error &&
+    data !== null &&
+    data.currentMonthShiftCount === 0 &&
+    data.upcomingShifts.length === 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <PageHeader title="Dra. Priscila Agendor" />
 
-      <div className="px-4 pt-4 pb-28 space-y-4">
-        {/* Revenue cards */}
-        <div className="grid grid-cols-2 gap-3">
-          <StatCard
-            label={`Previsão ${currentMonthName}`}
-            value={loading ? "..." : currentRevenue}
-            icon={TrendingUp}
-            accentColor="#3B82F6"
-          />
-          <StatCard
-            label={`Previsão ${nextMonthName}`}
-            value={loading ? "..." : nextRevenue}
-            icon={Calendar}
-            accentColor="#14B8A6"
-          />
+      {loading ? (
+        <DashboardSkeleton />
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+          <p className="text-gray-500 mb-4">Não foi possível carregar os dados.</p>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setError(false);
+              setLoading(true);
+              fetch("/api/dashboard")
+                .then((r) => r.json())
+                .then((d: DashboardData) => setData(d))
+                .catch(() => {
+                  setError(true);
+                  toast.error("Erro de conexão. Tente novamente.");
+                })
+                .finally(() => setLoading(false));
+            }}
+          >
+            Tentar novamente
+          </Button>
         </div>
+      ) : (
+        <div className="px-4 pt-4 pb-28 space-y-4">
+          {/* Revenue cards */}
+          <div className="grid grid-cols-2 gap-3">
+            <StatCard
+              label={`Previsão ${currentMonthName}`}
+              value={formatCurrency(Number(data?.currentMonthRevenue ?? 0))}
+              icon={TrendingUp}
+              accentColor="#3B82F6"
+            />
+            <StatCard
+              label={`Previsão ${nextMonthName}`}
+              value={formatCurrency(Number(data?.nextMonthRevenue ?? 0))}
+              icon={Calendar}
+              accentColor="#14B8A6"
+            />
+          </div>
 
-        {/* Shift count */}
-        <StatCard
-          label="Plantões este mês"
-          value={loading ? "..." : shiftCount}
-          icon={Briefcase}
-          accentColor="#A855F7"
-        />
+          {/* Shift count */}
+          <StatCard
+            label="Plantões este mês"
+            value={String(data?.currentMonthShiftCount ?? 0)}
+            icon={Briefcase}
+            accentColor="#A855F7"
+          />
 
-        {/* Upcoming shifts */}
-        {loading ? (
-          <div className="h-32 bg-white rounded-xl border border-gray-100 animate-pulse" />
-        ) : (
-          <UpcomingShifts shifts={data?.upcomingShifts ?? []} />
-        )}
-      </div>
+          {/* Empty state */}
+          {isEmpty ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Building2 size={48} className="text-gray-300 mb-4" />
+              <p className="text-gray-500 font-medium mb-1">
+                Comece adicionando seus locais de trabalho
+              </p>
+              <p className="text-gray-400 text-sm mb-6">
+                Cadastre um local para poder agendar plantões
+              </p>
+              <Button
+                className="bg-[#0F172A] hover:bg-[#1e293b] text-white"
+                onClick={() => router.push("/workplaces")}
+              >
+                Ir para Locais
+              </Button>
+            </div>
+          ) : (
+            <UpcomingShifts shifts={data?.upcomingShifts ?? []} />
+          )}
+        </div>
+      )}
     </div>
   );
 }

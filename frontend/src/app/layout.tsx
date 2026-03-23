@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Toaster } from "@/components/ui/toaster";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -10,7 +11,6 @@ export const metadata: Metadata = {
   title: "Dra. Priscila Agendor",
   description: "Gestão Profissional Oftalmológica",
   manifest: "/manifest.json",
-  themeColor: "#0F172A",
 };
 
 export const viewport: Viewport = {
@@ -36,6 +36,7 @@ export default function RootLayout({
         {children}
         <BottomNav />
         <Toaster />
+        <SonnerToaster position="top-center" richColors />
       </body>
     </html>
   );

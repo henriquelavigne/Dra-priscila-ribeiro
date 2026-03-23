@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { formatCompactCurrency } from "@/lib/utils";
 
 export type CalendarShift = {
@@ -24,7 +25,7 @@ interface ShiftBlockProps {
   shift: CalendarShift;
 }
 
-export function ShiftBlock({ shift }: ShiftBlockProps) {
+export const ShiftBlock = memo(function ShiftBlock({ shift }: ShiftBlockProps) {
   const { workplace, expectedValue, status } = shift;
   const abbr = workplace.name.slice(0, 3).toUpperCase();
   const value = formatCompactCurrency(Number(expectedValue));
@@ -44,4 +45,4 @@ export function ShiftBlock({ shift }: ShiftBlockProps) {
       {abbr} {value}
     </div>
   );
-}
+});
