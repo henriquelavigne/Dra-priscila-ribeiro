@@ -11,11 +11,9 @@ import type { CalendarShift } from "@/components/calendar/ShiftBlock";
 import type { Workplace } from "@/types";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MONTH_NAMES_SHORT } from "@/lib/constants";
 
-const MONTH_NAMES_SHORT = [
-  "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-  "Jul", "Ago", "Set", "Out", "Nov", "Dez",
-];
+
 
 export default function SchedulePage() {
   const today = new Date();
@@ -162,20 +160,20 @@ export default function SchedulePage() {
   const selectedDayShifts = getShiftsForDate(selectedDate);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sand-light pb-8">
       <PageHeader title="Agenda" />
 
       <div className="pb-32">
         {loadingShifts ? (
-          <div className="bg-white">
+          <div className="bg-white/80 backdrop-blur-sm border-b border-sand-dark/50">
             {/* Header skeleton */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+            <div className="flex items-center justify-between px-4 py-4 border-b border-sand-dark/50">
               <Skeleton className="w-8 h-8 rounded-lg" />
               <Skeleton className="w-32 h-5 rounded" />
               <Skeleton className="w-8 h-8 rounded-lg" />
             </div>
             {/* Week days skeleton */}
-            <div className="grid grid-cols-7 border-b border-gray-100 py-2">
+            <div className="grid grid-cols-7 border-b border-sand-dark/50 py-3">
               {Array.from({ length: 7 }).map((_, i) => (
                 <Skeleton key={i} className="mx-auto w-6 h-3 rounded" />
               ))}
@@ -183,8 +181,8 @@ export default function SchedulePage() {
             {/* Grid skeleton */}
             <div className="grid grid-cols-7">
               {Array.from({ length: 35 }).map((_, i) => (
-                <div key={i} className="min-h-[64px] border-b border-r border-gray-100 p-1">
-                  <Skeleton className="w-5 h-5 rounded-full mb-1" />
+                <div key={i} className="min-h-[72px] border-b border-r border-sand-dark/50 p-1.5">
+                  <Skeleton className="w-5 h-5 rounded-full mb-1.5" />
                   {i % 5 === 0 && <Skeleton className="w-full h-3 rounded-sm" />}
                 </div>
               ))}

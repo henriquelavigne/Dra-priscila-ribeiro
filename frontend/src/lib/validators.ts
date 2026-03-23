@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ShiftStatus } from "@prisma/client";
 
 export const workplaceSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(100, "Nome muito longo"),
@@ -44,9 +45,7 @@ export const updateShiftSchema = z.object({
     .number("Valor deve ser um número")
     .positive("Valor deve ser positivo")
     .optional(),
-  status: z
-    .enum(["scheduled", "completed", "cancelled"])
-    .optional(),
+  status: z.nativeEnum(ShiftStatus).optional(),
   notes: z.string().optional(),
 });
 

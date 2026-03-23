@@ -43,9 +43,26 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        // App custom colors
-        slate900: "#0F172A",
-        blue500: "#3B82F6",
+        slate900: "#111111", // Refatorado para Deep Black
+        blue500: "#C5A059", // Refatorado para Classic Gold 
+        gold: {
+          light: "#E6C27A",
+          DEFAULT: "#C5A059",
+          dark: "#A67C00",
+        },
+        sand: {
+          light: "#FAF9F6",
+          DEFAULT: "#F9F6F0",
+          dark: "#EAEADF"
+        }
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)"],
+        serif: ["var(--font-playfair)"],
+      },
+      boxShadow: {
+        'soft': '0 10px 40px -10px rgba(0,0,0,0.04)',
+        'luxury': '0 20px 40px -20px rgba(197, 160, 89, 0.15)',
       },
       borderRadius: {
         lg: "var(--radius)",

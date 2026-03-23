@@ -1,3 +1,5 @@
+import { ShiftStatus as PrismaShiftStatus } from "@prisma/client";
+
 export const COLOR_PALETTE: string[] = [
   "#2563EB", // azul
   "#DC2626", // vermelho
@@ -18,9 +20,20 @@ export const COLOR_PALETTE: string[] = [
 ];
 
 export const SHIFT_STATUS = {
-  SCHEDULED: "scheduled",
-  COMPLETED: "completed",
-  CANCELLED: "cancelled",
+  SCHEDULED: PrismaShiftStatus.scheduled,
+  COMPLETED: PrismaShiftStatus.completed,
+  CANCELLED: PrismaShiftStatus.cancelled,
 } as const;
 
 export type ShiftStatus = (typeof SHIFT_STATUS)[keyof typeof SHIFT_STATUS];
+
+export const MONTH_NAMES = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
+export const MONTH_NAMES_SHORT = [
+  "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+  "Jul", "Ago", "Set", "Out", "Nov", "Dez"
+];
+

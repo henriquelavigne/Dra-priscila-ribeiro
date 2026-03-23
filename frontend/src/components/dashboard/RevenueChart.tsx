@@ -22,8 +22,8 @@ export function RevenueChart({ data }: RevenueChartProps) {
   const BAR_H = 120; // px — usable bar area height
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-      <p className="text-sm font-semibold text-gray-700 mb-4">Receita — últimos 3 meses</p>
+    <div className="bg-white/80 backdrop-blur-sm rounded-[20px] border border-sand-dark/50 shadow-luxury p-5">
+      <p className="text-sm font-serif font-bold text-slate-900 mb-6 tracking-tight">Receita — últimos 3 meses</p>
 
       <div className="relative">
         {/* Horizontal guide lines */}
@@ -44,20 +44,20 @@ export function RevenueChart({ data }: RevenueChartProps) {
                 {/* Value labels above bars */}
                 <div className="flex gap-1 items-end mb-1">
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-[10px] text-blue-500 font-medium leading-none">
+                    <span className="text-[10px] text-slate-400 font-medium leading-none">
                       {formatK(point.expected)}
                     </span>
                     <div
-                      className="w-5 bg-blue-400 rounded-t-sm transition-all"
+                      className="w-5 bg-sand-dark rounded-t-md transition-all"
                       style={{ height: Math.max(expPct, point.expected > 0 ? 4 : 0) }}
                     />
                   </div>
                   <div className="flex flex-col items-center gap-0.5">
-                    <span className="text-[10px] text-green-600 font-medium leading-none">
+                    <span className="text-[10px] text-gold-dark font-medium leading-none">
                       {formatK(point.received)}
                     </span>
                     <div
-                      className="w-5 bg-green-400 rounded-t-sm transition-all"
+                      className="w-5 bg-gold rounded-t-md transition-all"
                       style={{ height: Math.max(recPct, point.received > 0 ? 4 : 0) }}
                     />
                   </div>
@@ -74,14 +74,14 @@ export function RevenueChart({ data }: RevenueChartProps) {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 mt-1">
+      <div className="flex items-center gap-4 mt-2">
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-sm bg-blue-400 shrink-0" />
-          <span className="text-xs text-gray-500">Previsto</span>
+          <span className="w-3 h-3 rounded bg-sand-dark shrink-0" />
+          <span className="text-xs text-slate-500 font-medium">Previsto</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <span className="w-3 h-3 rounded-sm bg-green-400 shrink-0" />
-          <span className="text-xs text-gray-500">Recebido</span>
+          <span className="w-3 h-3 rounded bg-gold shrink-0" />
+          <span className="text-xs text-slate-500 font-medium">Recebido</span>
         </div>
       </div>
     </div>

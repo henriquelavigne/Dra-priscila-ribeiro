@@ -3,11 +3,9 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayCell } from "./DayCell";
 import type { CalendarShift } from "./ShiftBlock";
+import { MONTH_NAMES } from "@/lib/constants";
 
-const MONTH_NAMES = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-];
+
 const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 function buildCalendarDays(year: number, month: number) {
@@ -69,34 +67,34 @@ export function MonthView({
   const days = buildCalendarDays(year, month);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white/80 backdrop-blur-sm shadow-soft">
       {/* Month nav header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+      <div className="flex items-center justify-between px-4 py-4 border-b border-sand-dark/50">
         <button
           onClick={onPrevMonth}
           aria-label="Mês anterior"
-          className="p-1.5 rounded-lg active:bg-gray-100 transition-colors"
+          className="p-1.5 rounded-lg active:bg-sand-light transition-colors"
         >
-          <ChevronLeft size={20} className="text-gray-600" />
+          <ChevronLeft size={20} className="text-slate-600" />
         </button>
-        <span className="font-semibold text-gray-900 text-base">
+        <span className="font-serif font-bold text-slate-900 text-lg tracking-tight capitalize">
           {MONTH_NAMES[month - 1]} {year}
         </span>
         <button
           onClick={onNextMonth}
           aria-label="Próximo mês"
-          className="p-1.5 rounded-lg active:bg-gray-100 transition-colors"
+          className="p-1.5 rounded-lg active:bg-sand-light transition-colors"
         >
-          <ChevronRight size={20} className="text-gray-600" />
+          <ChevronRight size={20} className="text-slate-600" />
         </button>
       </div>
 
       {/* Week day headers */}
-      <div className="grid grid-cols-7 border-b border-gray-100">
+      <div className="grid grid-cols-7 border-b border-sand-dark/50 bg-sand">
         {WEEK_DAYS.map((d) => (
           <div
             key={d}
-            className="text-center text-xs text-gray-400 font-medium py-2"
+            className="text-center text-xs text-slate-500 font-medium py-3"
           >
             {d}
           </div>
@@ -104,7 +102,7 @@ export function MonthView({
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 border-l border-t border-gray-100">
+      <div className="grid grid-cols-7 border-l border-t border-transparent">
         {days.map((cell, i) => {
           const dayShifts = shifts.filter((s) =>
             shiftBelongsToDay(s, cell.date)

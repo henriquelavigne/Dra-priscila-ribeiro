@@ -10,11 +10,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatCurrency } from "@/lib/utils";
 import type { ShiftWithPaymentStatus, FinanceSummary, Payment } from "@/types";
 import { toast } from "sonner";
+import { MONTH_NAMES } from "@/lib/constants";
 
-const MONTH_NAMES = [
-  "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
-];
+
 
 type FilterType = "all" | "pending" | "paid";
 
@@ -34,7 +32,7 @@ function SummarySkeleton() {
   return (
     <div className="grid grid-cols-3 gap-2">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 space-y-2">
+        <div key={i} className="bg-white/80 rounded-[20px] shadow-luxury border border-sand-dark/50 p-4 space-y-2">
           <Skeleton className="h-3 w-14 rounded" />
           <Skeleton className="h-5 w-full rounded" />
         </div>
@@ -147,7 +145,7 @@ export default function FinancesPage() {
   const totalPending = summary?.totalPending ?? 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sand-light">
       <PageHeader title="Financeiro" />
 
       <div className="px-4 pt-4 pb-28 space-y-4">
@@ -166,17 +164,17 @@ export default function FinancesPage() {
         {/* Summary cards */}
         {loadingData ? <SummarySkeleton /> : (
           <div className="grid grid-cols-3 gap-2">
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3">
-              <p className="text-xs text-gray-500 font-medium">Previsto</p>
-              <p className="text-sm font-bold text-blue-600 mt-1 truncate">{formatCurrency(totalExpected)}</p>
+            <div className="bg-white/80 backdrop-blur-sm shadow-luxury rounded-[20px] p-4 border border-sand-dark/50">
+              <p className="text-xs text-slate-500 font-medium">Previsto</p>
+              <p className="text-sm font-semibold text-slate-900 mt-1 truncate">{formatCurrency(totalExpected)}</p>
             </div>
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3">
-              <p className="text-xs text-gray-500 font-medium">Recebido</p>
-              <p className="text-sm font-bold text-green-600 mt-1 truncate">{formatCurrency(totalReceived)}</p>
+            <div className="bg-white/80 backdrop-blur-sm shadow-luxury rounded-[20px] p-4 border border-sand-dark/50">
+              <p className="text-xs text-slate-500 font-medium whitespace-nowrap">AR</p>
+              <p className="text-sm font-semibold text-red-600 mt-1 truncate">{formatCurrency(totalPending)}</p>
             </div>
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-3">
-              <p className="text-xs text-gray-500 font-medium">Pendente</p>
-              <p className="text-sm font-bold text-red-600 mt-1 truncate">{formatCurrency(totalPending)}</p>
+            <div className="bg-white/80 backdrop-blur-sm shadow-luxury rounded-[20px] p-4 border border-sand-dark/50">
+              <p className="text-xs text-slate-500 font-medium">Recebido</p>
+              <p className="text-sm font-semibold text-gold-dark mt-1 truncate">{formatCurrency(totalReceived)}</p>
             </div>
           </div>
         )}

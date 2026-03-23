@@ -6,20 +6,20 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { WorkplaceCard } from "@/components/workplace/WorkplaceCard";
 import { WorkplaceForm } from "@/components/workplace/WorkplaceForm";
 import { Button } from "@/components/ui/button";
-import type { Workplace } from "@prisma/client";
+import type { Workplace } from "@/types";
 import { toast } from "sonner";
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 animate-pulse">
-      <div className="flex items-start gap-3">
-        <div className="w-4 h-4 rounded-full bg-gray-200 mt-1" />
-        <div className="flex-1 space-y-2">
-          <div className="h-4 bg-gray-200 rounded w-2/3" />
-          <div className="h-3 bg-gray-100 rounded w-1/2" />
-          <div className="h-3 bg-gray-100 rounded w-1/3" />
+    <div className="bg-white/80 rounded-[20px] border border-sand-dark/50 shadow-luxury p-5 animate-pulse">
+      <div className="flex items-start gap-4">
+        <div className="w-4 h-4 rounded-full bg-sand-dark mt-1" />
+        <div className="flex-1 space-y-3">
+          <div className="h-4 bg-sand-dark rounded w-2/3" />
+          <div className="h-3 bg-sand-light rounded w-1/2" />
+          <div className="h-3 bg-sand-light rounded w-1/3" />
         </div>
-        <div className="h-5 w-12 bg-gray-100 rounded-full" />
+        <div className="h-5 w-12 bg-sand-light rounded-full" />
       </div>
     </div>
   );
@@ -81,7 +81,7 @@ export default function WorkplacesPage() {
           <Button
             size="icon"
             aria-label="Adicionar local de trabalho"
-            className="bg-[#0F172A] hover:bg-[#1e293b] text-white rounded-full w-9 h-9"
+            className="bg-slate-900 hover:bg-black text-white rounded-full w-9 h-9 shadow-soft"
             onClick={handleCreate}
           >
             <Plus size={18} />
@@ -98,15 +98,17 @@ export default function WorkplacesPage() {
           </>
         ) : workplaces.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <Building2 size={48} className="text-gray-300 mb-4" />
-            <p className="text-gray-500 font-medium mb-1">
+            <div className="w-16 h-16 bg-sand rounded-[20px] flex flex-col items-center justify-center mb-6 shadow-luxury">
+              <Building2 size={32} className="text-gold-dark" />
+            </div>
+            <p className="text-slate-600 font-serif font-bold text-xl mb-2 tracking-tight">
               Nenhum local cadastrado
             </p>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-slate-500 text-sm mb-8">
               Adicione seus locais de trabalho para começar
             </p>
             <Button
-              className="bg-[#0F172A] hover:bg-[#1e293b] text-white"
+              className="bg-slate-900 hover:bg-black text-white rounded-xl px-6 py-5 shadow-soft"
               onClick={handleCreate}
             >
               <Plus size={16} className="mr-2" />

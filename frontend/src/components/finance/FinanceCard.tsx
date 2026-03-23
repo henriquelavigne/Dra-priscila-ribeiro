@@ -36,7 +36,7 @@ export function FinanceCard({ shift, onRegisterPayment, onEditPayment }: Finance
   });
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 space-y-2">
+    <div className="bg-white/80 backdrop-blur-sm rounded-[20px] border border-sand-dark/50 shadow-luxury p-5 space-y-3">
       {/* Header row */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -44,7 +44,7 @@ export function FinanceCard({ shift, onRegisterPayment, onEditPayment }: Finance
             className="w-3 h-3 rounded-full shrink-0"
             style={{ backgroundColor: shift.workplace.color }}
           />
-          <span className="font-medium text-sm text-gray-900 truncate">
+          <span className="font-medium text-sm text-slate-900 truncate">
             {shift.workplace.name}
           </span>
         </div>
@@ -54,11 +54,11 @@ export function FinanceCard({ shift, onRegisterPayment, onEditPayment }: Finance
       </div>
 
       {/* Date + values */}
-      <div className="text-sm text-gray-500 space-y-0.5 pl-5">
+      <div className="text-sm text-slate-500 space-y-1 pl-5">
         <p>{dateLabel}</p>
         <p>
           Valor:{" "}
-          <span className="font-medium text-gray-800">
+          <span className="font-medium text-slate-800">
             {formatCurrency(referenceValue)}
           </span>
         </p>
@@ -79,7 +79,7 @@ export function FinanceCard({ shift, onRegisterPayment, onEditPayment }: Finance
         <Button
           variant="ghost"
           size="sm"
-          className="text-[#0F172A] font-medium pl-5 h-auto py-1 hover:bg-transparent hover:underline"
+          className="text-gold-dark font-semibold pl-5 h-auto py-1 hover:bg-transparent hover:text-gold hover:underline"
           onClick={() => onRegisterPayment(shift)}
         >
           Registrar Recebimento
@@ -89,7 +89,7 @@ export function FinanceCard({ shift, onRegisterPayment, onEditPayment }: Finance
         <Button
           variant="ghost"
           size="sm"
-          className="text-[#0F172A] font-medium pl-5 h-auto py-1 hover:bg-transparent hover:underline"
+          className="text-gold-dark font-semibold pl-5 h-auto py-1 hover:bg-transparent hover:text-gold hover:underline"
           onClick={() => onEditPayment(shift)}
         >
           Editar Pagamento

@@ -7,6 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ShiftStatus {
+  scheduled
+  completed
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  partial
+  paid
+  overdue
+}
+
+enum AutoNoteStatus {
+  active
+  resolved
+}
+
 model Workplace {
   id                  String   @id @default(uuid())
   name                String
@@ -30,7 +48,7 @@ model Shift {
   date          DateTime @db.Date
   expectedValue Decimal  @map("expected_value")
   actualValue   Decimal? @map("actual_value")
-  status        String   @default("scheduled")
+  status        ShiftStatus @default(scheduled)
   notes         String?
   source        String   @default("web")
   sourceDetail  String?  @map("source_detail")
@@ -42,6 +60,9 @@ model Shift {
   autoNotes AutoNote[]
 
   @@map("shifts")
+  @@index([date])
+  @@index([workplaceId])
+  @@index([status])
 }
 
 model AuditLog {
@@ -61,7 +82,7 @@ model Payment {
   shiftId        String   @unique @map("shift_id")
   amountReceived Decimal  @map("amount_received")
   paymentDate    DateTime @map("payment_date") @db.Date
-  status         String
+  status         PaymentStatus
   notes          String?
   createdAt      DateTime @default(now()) @map("created_at")
 
@@ -77,7 +98,7 @@ model AutoNote {
   type          String
   message       String
   amountPending Decimal   @map("amount_pending")
-  status        String    @default("active")
+  status        AutoNoteStatus @default(active)
   dueDate       DateTime  @map("due_date")
   createdAt     DateTime  @default(now()) @map("created_at")
   resolvedAt    DateTime? @map("resolved_at")
@@ -86,4 +107,15 @@ model AutoNote {
   shift     Shift     @relation(fields: [shiftId], references: [id])
 
   @@map("auto_notes")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
 }

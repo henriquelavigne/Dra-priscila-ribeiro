@@ -1,7 +1,7 @@
-import type { Workplace, Shift, AuditLog, Payment, AutoNote, Prisma } from "@prisma/client";
+import type { Workplace, Shift, AuditLog, Payment, AutoNote, Prisma, ShiftStatus, PaymentStatus, AutoNoteStatus } from "@prisma/client";
 
 // Re-exports
-export type { Workplace, Shift, AuditLog, Payment, AutoNote };
+export type { Workplace, Shift, AuditLog, Payment, AutoNote, ShiftStatus, PaymentStatus, AutoNoteStatus };
 
 // Relations
 export type WorkplaceWithShifts = Workplace & {
@@ -55,7 +55,7 @@ export type UpdateShiftInput = {
   date?: string;
   expectedValue?: number;
   actualValue?: number;
-  status?: "scheduled" | "completed" | "cancelled";
+  status?: ShiftStatus;
   notes?: string;
 };
 

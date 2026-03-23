@@ -20,11 +20,9 @@ import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import type { ShiftWithWorkplace } from "@/types";
 import { toast } from "sonner";
+import { MONTH_NAMES } from "@/lib/constants";
 
-const MONTH_NAMES = [
-  "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
-];
+
 
 interface ChartPoint {
   month: number;
@@ -138,7 +136,7 @@ export default function DashboardPage() {
     data.upcomingShifts.length === 0;
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sand-light">
       <PageHeader
         title="Dra. Priscila Agendor"
         rightAction={
@@ -156,7 +154,7 @@ export default function DashboardPage() {
   );
 
   if (error) return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sand-light">
       <PageHeader
         title="Dra. Priscila Agendor"
         rightAction={

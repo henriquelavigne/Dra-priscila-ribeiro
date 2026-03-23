@@ -15,7 +15,7 @@ interface WorkplaceCardProps {
 export function WorkplaceCard({ workplace, activeAutoNotesCount = 0, onEdit }: WorkplaceCardProps) {
   return (
     <button
-      className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 active:scale-[0.98] transition-transform relative"
+      className="w-full text-left bg-white/80 backdrop-blur-sm rounded-[20px] border border-sand-dark/50 shadow-luxury p-5 active:scale-[0.98] transition-all relative"
       onClick={() => onEdit(workplace)}
     >
       {/* Notification dot */}
@@ -32,15 +32,15 @@ export function WorkplaceCard({ workplace, activeAutoNotesCount = 0, onEdit }: W
           />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-gray-900 truncate">
+              <span className="font-semibold text-slate-900 truncate tracking-tight">
                 {workplace.name}
               </span>
               {workplace.notes && (
-                <FileText size={13} className="text-gray-400 shrink-0" />
+                <FileText size={13} className="text-slate-400 shrink-0" />
               )}
             </div>
-            <p className="text-sm text-gray-500 mt-0.5">
-              Média: {formatCurrency(Number(workplace.averageValue))}
+            <p className="text-sm text-slate-500 mt-0.5">
+              Média: <span className="font-medium text-slate-800">{formatCurrency(Number(workplace.averageValue))}</span>
             </p>
             {activeAutoNotesCount > 0 && (
               <p className="text-xs text-red-500 mt-0.5">
