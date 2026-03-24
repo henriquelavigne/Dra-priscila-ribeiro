@@ -1,28 +1,22 @@
-import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
+import { NextRequest, NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware() {
-    return NextResponse.next();
-  },
-  {
+export async function middleware(req: NextRequest) {
+  const token = await getToken({
+    req,
     secret: process.env.NEXTAUTH_SECRET ?? "priscila_agendor_secret_key_dev_2026",
-    callbacks: {
-      authorized: ({ token }) => !!token,
-    },
-    pages: {
-      signIn: "/login",
-    },
-    cookies: {
-      sessionToken: {
-        name: `priscila-agendor.session-token`,
-      },
-    },
-  }
-);
+    cookieName: "priscila-agendor.session-token",
+  });
 
-// Protege apenas as páginas (não as rotas /api/*).
-// Cada route handler de API é responsável pela sua própria autenticação se necessário.
+  if (!token) {
+    const loginUrl = new URL("/login", req.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
+}
+
+// Protege apenas páginas — /api/* nunca passa por aqui
 export const config = {
   matcher: [
     "/((?!api/|login|_next/static|_next/image|favicon.ico|manifest.json|fonts).*)",
