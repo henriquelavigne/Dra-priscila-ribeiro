@@ -16,14 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-type Settings = {
-  botPhoneNumber: string;
-  botName: string;
-  botLastSeen: string;
-  botStatus: string;
-  botQrCode: string;
-};
-
 type ConnectionStatus = "online" | "unstable" | "offline" | "unknown";
 
 function getBotConnectionStatus(lastSeen: string): ConnectionStatus {
@@ -87,38 +79,40 @@ function SkeletonField() {
 }
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<Settings>({
-    botPhoneNumber: "",
-    botName: "Agendor",
-    botLastSeen: "",
-    botStatus: "",
-    botQrCode: "",
-  });
+  // Campos editáveis — controlados pelo usuário; nunca sobrescritos pelo polling
+  const [form, setForm] = useState({ botPhoneNumber: "", botName: "Agendor" });
+  // Campos de status — atualizados pelo polling sem interferir no que o usuário digita
+  const [status, setStatus] = useState({ botLastSeen: "", botStatus: "", botQrCode: "" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const loadSettings = useCallback(async (showError = false) => {
+  const loadSettings = useCallback(async (isInitialLoad = false) => {
     try {
       const res = await fetch("/api/settings");
       if (!res.ok) throw new Error("api_error");
       const data = await res.json();
-      setSettings({
-        botPhoneNumber: data.botPhoneNumber ?? "",
-        botName: data.botName ?? "Agendor",
+      // Na carga inicial, preenche também os campos editáveis
+      if (isInitialLoad) {
+        setForm({
+          botPhoneNumber: data.botPhoneNumber ?? "",
+          botName: data.botName ?? "Agendor",
+        });
+      }
+      // Polling sempre atualiza apenas status (não apaga o que o usuário está digitando)
+      setStatus({
         botLastSeen: data.botLastSeen ?? "",
         botStatus: data.botStatus ?? "",
         botQrCode: data.botQrCode ?? "",
       });
     } catch {
-      if (showError) toast.error("Erro ao carregar configurações. Recarregue a página.");
+      if (isInitialLoad) toast.error("Erro ao carregar configurações. Recarregue a página.");
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadSettings(true); // load inicial mostra erro
-    // Polling silencioso — sem toast repetido
+    loadSettings(true);
     const interval = setInterval(() => loadSettings(false), 10_000);
     return () => clearInterval(interval);
   }, [loadSettings]);
@@ -130,8 +124,8 @@ export default function SettingsPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          botPhoneNumber: settings.botPhoneNumber,
-          botName: settings.botName,
+          botPhoneNumber: form.botPhoneNumber,
+          botName: form.botName,
         }),
       });
       let data: Record<string, string>;
@@ -145,7 +139,12 @@ export default function SettingsPage() {
         toast.error(data.error ?? "Erro ao salvar.");
         return;
       }
-      setSettings((s) => ({ ...s, ...data }));
+      // Atualiza status com a resposta; campos editáveis já estão corretos no form
+      setStatus((s) => ({
+        botLastSeen: data.botLastSeen ?? s.botLastSeen,
+        botStatus: data.botStatus ?? s.botStatus,
+        botQrCode: data.botQrCode ?? s.botQrCode,
+      }));
       toast.success("Configurações salvas com sucesso.");
     } catch {
       toast.error("Sem conexão. Verifique sua internet e tente novamente.");
@@ -154,7 +153,7 @@ export default function SettingsPage() {
     }
   }
 
-  const connStatus = getBotConnectionStatus(settings.botLastSeen);
+  const connStatus = getBotConnectionStatus(status.botLastSeen);
   const { label, color, dot, Icon } = STATUS_CONFIG[connStatus];
 
   return (
@@ -180,9 +179,9 @@ export default function SettingsPage() {
             <div className="flex items-center gap-2.5">
               <span className={`w-2.5 h-2.5 rounded-full ${dot} ${connStatus === "online" ? "animate-pulse" : ""}`} />
               <span className={`text-sm font-medium ${color}`}>{label}</span>
-              {settings.botLastSeen && (
+              {status.botLastSeen && (
                 <span className="text-xs text-slate-400">
-                  · {formatTimeAgo(settings.botLastSeen)}
+                  · {formatTimeAgo(status.botLastSeen)}
                 </span>
               )}
             </div>
@@ -190,14 +189,14 @@ export default function SettingsPage() {
           </div>
 
           {/* QR Code para scan */}
-          {!loading && settings.botQrCode && connStatus !== "online" && (
+          {!loading && status.botQrCode && connStatus !== "online" && (
             <div className="mb-4 flex flex-col items-center gap-2 bg-slate-50 rounded-xl p-4">
               <p className="text-xs font-semibold text-slate-600 mb-1">
                 Escaneie com o WhatsApp da Dra. Priscila
               </p>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={settings.botQrCode}
+                src={status.botQrCode}
                 alt="QR Code WhatsApp"
                 className="w-48 h-48 rounded-lg"
               />
@@ -223,10 +222,10 @@ export default function SettingsPage() {
                 type="tel"
                 inputMode="numeric"
                 placeholder="Ex: 5575999999999"
-                value={settings.botPhoneNumber ?? ""}
+                value={form.botPhoneNumber}
                 onChange={(e) =>
-                  setSettings((s) => ({
-                    ...s,
+                  setForm((f) => ({
+                    ...f,
                     botPhoneNumber: e.target.value.replace(/\D/g, ""),
                   }))
                 }
